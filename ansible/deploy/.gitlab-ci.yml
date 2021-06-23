@@ -1,0 +1,44 @@
+variables:
+  ANSIBLE_INVENTORY: inventory.ini
+  ANSIBLE_PLAYBOOK_DIRECTORY: ansible
+  ANSIBLE_PLAYBOOK: playbook.yml
+  #ANSIBLE_VAULT_PASSWORD:
+  #ANSIBLE_EXTRA_VARS:
+  #ANSIBLE_TAGS:
+
+ansible_deploy:
+  stage: deploy
+  image: cytopia/ansible:latest-tools
+  before_script:
+    - cd ${CI_PROJECT_DIR}/$ANSIBLE_PLAYBOOK_DIRECTORY
+    - mkdir -p ~/.ssh
+    - echo "$SSH_PRIVATE_KEY" | tr -d '\r' > ~/.ssh/id_rsa
+    - chmod 700 ~/.ssh/id_rsa
+    - eval "$(ssh-agent -s)"
+    - ssh-add ~/.ssh/id_rsa
+    # If ANSIBLE_VAULT_PASSWORD is non-null/non-zero string
+    - |
+      if [ ! -z "${ANSIBLE_VAULT_PASSWORD}" ]; then
+        VAULT_PASSWORD="--vault-password-file .vault_password.txt"
+        touch .vault_password.txt
+        chmod 600 .vault_password.txt
+        echo $ANSIBLE_VAULT_PASSWORD > .vault_password.txt ;
+      else
+        VAULT_PASSWORD="" ;
+      fi
+    # If ANSIBLE_EXTRA_VARS is non-null/non-zero string
+    - |
+      if [ ! -z "${ANSIBLE_EXTRA_VARS}" ]; then
+        EXTRA_VARS="--extra-vars \"${ANSIBLE_EXTRA_VARS}\" " ;
+      else
+        EXTRA_VARS="" ;
+      fi
+    # If ANSIBLE_TAGS is non-null/non-zero string
+    - |
+      if [ ! -z "${ANSIBLE_TAGS}" ]; then
+        TAGS="--tags  \"${ANSIBLE_TAGS}\"" ;
+      else
+        TAGS="" ;
+      fi
+  script:
+    - ansible-playbook $ANSIBLE_PLAYBOOK --inventory $ANSIBLE_INVENTORY $EXTRA_VARS $TAGS $VAULT_PASSWORD
