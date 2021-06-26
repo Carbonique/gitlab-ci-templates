@@ -16,7 +16,7 @@ ansible_deploy:
     - chmod 700 ~/.ssh/id_rsa
     - eval "$(ssh-agent -s)"
     - ssh-add ~/.ssh/id_rsa
-    # If ANSIBLE_VAULT_PASSWORD is non-null/non-zero string
+    # If ANSIBLE_VAULT_PASSWORD is defined
     - |
       if [ ! -z "${ANSIBLE_VAULT_PASSWORD}" ]; then
         VAULT_PASSWORD="--vault-password-file .vault_password.txt"
@@ -26,14 +26,14 @@ ansible_deploy:
       else
         VAULT_PASSWORD="" ;
       fi
-    # If ANSIBLE_EXTRA_VARS is non-null/non-zero string
+    # If ANSIBLE_EXTRA_VARS is defined
     - |
       if [ ! -z "${ANSIBLE_EXTRA_VARS}" ]; then
         EXTRA_VARS="--extra-vars \"${ANSIBLE_EXTRA_VARS}\" " ;
       else
         EXTRA_VARS="" ;
       fi
-    # If ANSIBLE_TAGS is non-null/non-zero string
+    # If ANSIBLE_TAGS is defined
     - |
       if [ ! -z "${ANSIBLE_TAGS}" ]; then
         TAGS="--tags  \"${ANSIBLE_TAGS}\"" ;
