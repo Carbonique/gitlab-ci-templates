@@ -6,8 +6,8 @@ variables:
   #ANSIBLE_EXTRA_VARS:
   #ANSIBLE_TAGS:
 
-ansible_deploy:
-  stage: deploy
+.ansible_deploy_template:
+  stage: undefined
   image: cytopia/ansible:latest-tools
   before_script:
     - cd ${CI_PROJECT_DIR}/$ANSIBLE_PLAYBOOK_DIRECTORY
