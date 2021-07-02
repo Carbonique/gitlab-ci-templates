@@ -13,5 +13,5 @@ This GitLab CI template can be included for Ansible deployments
 | ANSIBLE_PLAYBOOK_DIRECTORY:  | Directory for the playbook.yml file               | ansible       | Required          |
 | ANSIBLE_PLAYBOOK:            | Playbook name                                     | playbook.yml  | Required          |
 | ANSIBLE_VAULT_PASSWORD:      | Ansible vault password                            |               | Optional          |
-| ANSIBLE_EXTRA_VARS:          | Extra variables. Pass as VAR=VALUE without quotes |               | Optional          |
+| ANSIBLE_EXTRA_VARS:          | Extra variables. Pass as `VAR=VALUE` without quotes |               | Optional          |
 | ANSIBLE_TAGS:                | Tags to be used when deploying the playbook       |               | Optional          |
